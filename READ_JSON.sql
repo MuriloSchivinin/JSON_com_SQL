@@ -75,43 +75,48 @@
 	)
 
 	SELECT @v_count = 0,
-		   @v_countMax = COUNT([Key]),
-		   @v_tipo_leitura = 'PIVOT'
+		   @v_countMax = COUNT([Key])
 	FROM OPENJSON(@v_json, '$.times')
 
+	SET @v_tipo_leitura = 'PIVOT' --'WITH' ou 'PIVOT'		
+			
 	IF @v_tipo_leitura = 'WITH' --Necessário conecer os campos em que irá trabalhar.
 	BEGIN
 		WHILE @v_count < @v_countMax
 		BEGIN
-
+			SET @v_qry = NULL
+			
 			SELECT @v_time = Value
 			FROM OPENJSON(@v_json, '$.times')
 			WHERE [Key] = @v_count
 
-			INSERT INTO #tmp_times_brasileiros_json
-			SELECT nome_time,
-				   data_criacao,
-				   estado_time,
-				   CASE
-					   WHEN titulos_mundiais IS NULL THEN
-						   nome_time + ' não tem Mundial'
-					   ELSE
-						   titulos_mundiais
-				   END AS titulos_mundiais,
-				   titulos_brasileiros,
-				   presidente_atual,
-				   @v_tipo_leitura
-			FROM
-				OPENJSON(@v_time)
-				WITH
-				(
-					nome_time		VARCHAR(15) '$.nome_time',
-					data_criacao		DATETIME    '$.data_criacao',
-					estado_time		CHAR(2)	    '$.estado_time',
-					titulos_mundiais	VARCHAR(30) '$.titulos_mundiais',
-					titulos_brasileiros 	INT	    '$.titulos_brasileiros',
-					presidente_atual	VARCHAR(30) '$.titulos_brasileiros'
-				)
+			SET @v_qry = '
+				INSERT INTO #tmp_times_brasileiros_json
+				SELECT nome_time, 
+					   data_criacao, 
+					   estado_time, 
+					   ISNULL(titulos_mundiais, nome_time + '' não tem mundial''), 
+					   titulos_brasileiros, 
+					   presidente_atual, ''' +
+					   @v_tipo_leitura + '''
+				FROM OPENJSON(''' + @v_time+ ''')
+				WITH (
+						nome_time	    VARCHAR(15)  ''$.nome_time'',
+						data_criacao	    DATETIME	 ''$.data_criacao'',
+						estado_time	    CHAR(2)	 ''$.estado_time'',
+						titulos_mundiais    VARCHAR(30)  ''$.titulos_mundiais'',
+						titulos_brasileiros INT		 ''$.titulos_brasileiros'',
+						presidente_atual    VARCHAR(30)  ''$.presidente_atual''
+					 )
+					 '
+			BEGIN TRY
+				EXEC(@v_qry)
+			END TRY
+			BEGIN CATCH
+				PRINT ERROR_NUMBER()
+				PRINT ERROR_MESSAGE()
+				PRINT @v_qry				
+			END CATCH
 
 			SET @v_count += 1
 		END
