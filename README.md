@@ -54,12 +54,12 @@ BEGIN
 				OPENJSON(@v_time)
 				WITH
 				(
-					nome_time			      VARCHAR(15) '$.nome_time',
-					data_criacao		    DATETIME	  '$.data_criacao',
-					estado_time			    CHAR(2)		  '$.estado_time',
-					titulos_mundiais	  VARCHAR(30) '$.titulos_mundiais',
-					titulos_brasileiros INT			    '$.titulos_brasileiros',
-					presidente_atual	  VARCHAR(30) '$.titulos_brasileiros'
+					nome_time	    VARCHAR(15) '$.nome_time',
+					data_criacao	    DATETIME	'$.data_criacao',
+					estado_time	    CHAR(2)	'$.estado_time',
+					titulos_mundiais    VARCHAR(30) '$.titulos_mundiais',
+					titulos_brasileiros INT		'$.titulos_brasileiros',
+					presidente_atual    VARCHAR(30) '$.presidente_atual'
 				)
 END
 ```
