@@ -17,29 +17,29 @@
 
 		CREATE TABLE #tmp_times_brasileiros
 		(
-			nome_time			VARCHAR(15) NOT NULL,
+			nome_time		VARCHAR(15) NOT NULL,
 			data_criacao		DATETIME NOT NULL,
-			estado_time			CHAR(2),
+			estado_time		CHAR(2),
 			titulos_mundiais	VARCHAR(30),
-			titulos_brasileiros INT,
+			titulos_brasileiros 	INT,
 			presidente_atual	VARCHAR(30)
 		)
 
 		CREATE TABLE #tmp_times_brasileiros_json
 		(
-			nome_time			VARCHAR(15) NOT NULL,
+			nome_time		VARCHAR(15) NOT NULL,
 			data_criacao		DATETIME NOT NULL,
-			estado_time			CHAR(2),
+			estado_time		CHAR(2),
 			titulos_mundiais	VARCHAR(30),
-			titulos_brasileiros INT,
+			titulos_brasileiros 	INT,
 			presidente_atual	VARCHAR(30),
 			tipo_leitura		CHAR(5)
 		)
 
 		CREATE TABLE #tmp_columns
 		(
-			chave				VARCHAR(50),
-			valor				VARCHAR(MAX)
+			chave			VARCHAR(50),
+			valor			VARCHAR(MAX)
 		);
 
 		INSERT INTO #tmp_times_brasileiros
@@ -60,12 +60,12 @@
 	
 	-- Variáveis para desenvolvimento
 	DECLARE @v_json			VARCHAR(MAX),
-			@v_count		INT,
-			@v_countMax		INT,
-			@v_tipo_leitura CHAR(5),
-			@v_time			VARCHAR(MAX),
-			@v_columns		VARCHAR(MAX),
-			@v_qry			VARCHAR(MAX)
+		@v_count		INT,
+		@v_countMax		INT,
+		@v_tipo_leitura 	CHAR(5),
+		@v_time			VARCHAR(MAX),
+		@v_columns		VARCHAR(MAX),
+		@v_qry			VARCHAR(MAX)
 
 	SELECT @v_json =
 	(
@@ -105,11 +105,11 @@
 				OPENJSON(@v_time)
 				WITH
 				(
-					nome_time			VARCHAR(15) '$.nome_time',
-					data_criacao		DATETIME	'$.data_criacao',
-					estado_time			CHAR(2)		'$.estado_time',
+					nome_time		VARCHAR(15) '$.nome_time',
+					data_criacao		DATETIME    '$.data_criacao',
+					estado_time		CHAR(2)	    '$.estado_time',
 					titulos_mundiais	VARCHAR(30) '$.titulos_mundiais',
-					titulos_brasileiros INT			'$.titulos_brasileiros',
+					titulos_brasileiros 	INT	    '$.titulos_brasileiros',
 					presidente_atual	VARCHAR(30) '$.titulos_brasileiros'
 				)
 
