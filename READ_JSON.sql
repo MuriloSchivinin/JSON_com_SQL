@@ -54,7 +54,7 @@
 		VALUES
 		('Corinthians', '19100901', 'SP', 2   , 7, 'Augusto Melo'),
 		('Flamengo'   , '18951115', 'RJ', 1   , 8, 'Rodolfo Landim'),
-		('Grêmio'     , '19030915', 'R2', 1   , 1, 'Alberto Guerrao'),
+		('Grêmio'     , '19030915', 'RS', 1   , 1, 'Alberto Guerrao'),
 		('Palmeiras'  , '19140826', 'SP', NULL, 12, 'Leila Pereira')
 	END
 	
@@ -148,3 +148,16 @@
 
 	END
 
+	SELECT nome_time,
+		   data_criacao,
+		   estado_time,
+		   CASE
+			   WHEN titulos_mundiais IS NULL THEN
+				   nome_time + ' não tem Mundial'
+			   ELSE
+				   titulos_mundiais
+		   END AS titulos_mundiais,
+		   titulos_brasileiros,
+		   presidente_atual,
+		   tipo_leitura
+	FROM #tmp_times_brasileiros_json
